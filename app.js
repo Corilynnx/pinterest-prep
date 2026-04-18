@@ -271,7 +271,7 @@ function renderLesson(id) {
       <div class="quiz-explain" id="quiz-explain-${i}"></div>
       <div class="quiz-nav" id="quiz-nav-${i}" style="display:none">
         ${i < l.quiz.length - 1
-          ? `<button class="btn btn-outline btn-sm" onclick="showQuizQuestion(${i + 1})">Next Question →</button>`
+          ? `<button class="btn btn-outline btn-sm" onclick="showQuizQuestion(${i + 1}, ${l.quiz.length})">Next Question →</button>`
           : `<button class="btn btn-success btn-sm" onclick="finishQuiz('${id}')">Finish Quiz ✓</button>`}
       </div>
     </div>
@@ -333,12 +333,12 @@ function handleQuizAnswer(lessonId, qIndex, optIndex) {
   }
 }
 
-function showQuizQuestion(index) {
+function showQuizQuestion(index, total) {
   document.querySelectorAll('[id^="quiz-q-"]').forEach((el, i) => {
     el.classList.toggle('hidden', i !== index);
   });
   const counter = document.getElementById('quiz-counter');
-  if (counter) counter.textContent = `Question ${index + 1} of ${Object.keys(LESSONS).find(k => document.querySelector('[id^="quiz-q-"]')) ? '?' : '?'}`;
+  if (counter) counter.textContent = `Question ${index + 1} of ${total}`;
 }
 
 function finishQuiz(lessonId) {
@@ -361,7 +361,7 @@ function finishQuiz(lessonId) {
       <div class="quiz-done-msg">${msg}</div>
       <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
         <button class="btn btn-ghost" onclick="navigateTo('lesson-${lessonId}')">↺ Redo Lesson</button>
-        ${score === total ? `<button class="btn btn-success" onclick="completeLesson('${lessonId}')">Mark Complete ✓</button>` : ''}
+        ${!isComplete('lesson-' + lessonId) ? `<button class="btn btn-success" onclick="completeLesson('${lessonId}')">Mark Complete ✓</button>` : '<span style="color:#16a34a;font-weight:600">✓ Already marked complete</span>'}
       </div>
     </div>
   `;
